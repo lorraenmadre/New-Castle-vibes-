@@ -1,0 +1,143 @@
+{
+  "entities": {
+    "User": {
+      "title": "User Profile",
+      "description": "User profile information and role.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "email": { "type": "string", "format": "email" },
+        "displayName": { "type": "string" },
+        "role": { "type": "string", "enum": ["owner", "collaborator", "legal-collaborator", "viewer"] },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "email", "role"]
+    },
+    "House": {
+      "title": "Castle House",
+      "description": "A legal or governance domain in the castle.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "description": { "type": "string" },
+        "mantra": { "type": "string" },
+        "intention": { "type": "string" },
+        "status": { "type": "string", "enum": ["clear", "active", "attention", "critical"] },
+        "order": { "type": "number" }
+      },
+      "required": ["id", "name"]
+    },
+    "LibraryItem": {
+      "title": "Library Item (Template/Tool)",
+      "description": "A usable object in the library (template, checklist, etc.).",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "houseId": { "type": "string" },
+        "title": { "type": "string" },
+        "type": { "type": "string", "enum": ["contract", "letter", "request", "declaration", "checklist", "agreement", "notice", "sop", "form", "playbook"] },
+        "description": { "type": "string" },
+        "status": { "type": "string", "enum": ["draft", "approved", "archived"] }
+      },
+      "required": ["id", "houseId", "title", "type"]
+    },
+    "CouncilMember": {
+      "title": "Council Member (Collaborator/Professional)",
+      "description": "A professional or trusted collaborator assigned to a house.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "houseId": { "type": "string" },
+        "name": { "type": "string" },
+        "role": { "type": "string" },
+        "contactInfo": { "type": "string" },
+        "status": { "type": "string", "enum": ["active", "inactive"] }
+      },
+      "required": ["id", "houseId", "name", "role"]
+    },
+    "VaultDocument": {
+      "title": "Vault Document",
+      "description": "A document stored in the house vault.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "houseId": { "type": "string" },
+        "fileName": { "type": "string" },
+        "fileUrl": { "type": "string" },
+        "uploadDate": { "type": "string", "format": "date-time" },
+        "confidentiality": { "type": "string", "enum": ["public", "private", "restricted"] }
+      },
+      "required": ["id", "houseId", "fileName", "fileUrl"]
+    },
+    "Repair": {
+      "title": "Repair (Issue/Risk)",
+      "description": "An identified risk or missing piece of information.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "houseId": { "type": "string" },
+        "title": { "type": "string" },
+        "severity": { "type": "string", "enum": ["low", "medium", "high", "urgent"] },
+        "status": { "type": "string", "enum": ["open", "resolved", "blocked"] }
+      },
+      "required": ["id", "houseId", "title", "severity", "status"]
+    },
+    "RoadmapTask": {
+      "title": "Roadmap Task",
+      "description": "A specific step in the user's roadmap.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "houseId": { "type": "string" },
+        "title": { "type": "string" },
+        "status": { "type": "string", "enum": ["todo", "in-progress", "done", "review"] },
+        "order": { "type": "number" }
+      },
+      "required": ["id", "userId", "title", "status"]
+    },
+    "Presence": {
+      "title": "Live Presence",
+      "description": "Real-time presence of a user in a house.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "houseId": { "type": "string" },
+        "status": { "type": "string", "enum": ["available", "focused", "in-session", "away"] },
+        "lastSeen": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "houseId", "status"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "User profiles."
+    },
+    "/houses/{houseId}": {
+      "schema": "House",
+      "description": "House definitions."
+    },
+    "/council/{memberId}": {
+      "schema": "CouncilMember",
+      "description": "House council members."
+    },
+    "/vault/{docId}": {
+      "schema": "VaultDocument",
+      "description": "House documents."
+    },
+    "/repairs/{repairId}": {
+      "schema": "Repair",
+      "description": "House issues."
+    },
+    "/roadmaps/{userId}/tasks/{taskId}": {
+      "schema": "RoadmapTask",
+      "description": "User-specific roadmap tasks."
+    },
+    "/presence/{userId}": {
+      "schema": "Presence",
+      "description": "Real-time user presence."
+    }
+  }
+}

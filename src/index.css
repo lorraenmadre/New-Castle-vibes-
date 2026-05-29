@@ -1,0 +1,29 @@
+@import url('https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600&family=Montserrat:wght@300;400;500;600;700;800;900&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-display: "Spectral", serif;
+  --font-sans: "Montserrat", sans-serif;
+  --font-spectral: "Spectral", serif;
+  --font-montserrat: "Montserrat", sans-serif;
+}
+
+@layer base {
+  body {
+    @apply font-sans antialiased bg-white text-black;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-display;
+  }
+}
+
+@layer utilities {
+  .heading-large {
+    @apply font-spectral tracking-tighter leading-[1.1];
+  }
+
+  .system-tag {
+    @apply font-montserrat text-[9px] font-extrabold uppercase tracking-[0.3em];
+  }
+}
