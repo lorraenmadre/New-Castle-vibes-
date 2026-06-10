@@ -5,11 +5,10 @@ import CastleMap from './components/CastleMap';
 import RoomView from './components/RoomView';
 import { db, handleFirestoreError, OperationType } from './firebase';
 import { collection, onSnapshot, query } from 'firebase/firestore';
-import { Map as MapIcon, LogOut, Bell, Search, Plus, Upload, Sparkles } from 'lucide-react';
+import { Bell, Search, Plus } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
-import { cn } from './lib/utils';
 import { INITIAL_HOUSES } from './constants';
-import UploadStoryFlow from './components/UploadStoryFlow';
+import UploadStoryFlow from './components/UploadStoryFlowSecure';
 
 type View = 'castle' | 'room';
 
@@ -216,4 +215,3 @@ export default function App() {
     </div>
   );
 }
-
