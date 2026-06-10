@@ -3,7 +3,7 @@ import { UserProfile, House } from './types';
 import Auth from './components/Auth';
 import CastleMap from './components/CastleMap';
 import RoomView from './components/RoomView';
-import { db, handleFirestoreError, OperationType } from './firebase';
+import { db } from './firebase';
 import { collection, onSnapshot, query } from 'firebase/firestore';
 import { Bell, Search, Plus } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
@@ -33,7 +33,8 @@ export default function App() {
       });
       setActivePresences(counts);
     }, (error) => {
-      handleFirestoreError(error, OperationType.LIST, 'presence');
+      console.error('Presence listener unavailable. Continuing without live presence:', error);
+      setActivePresences({});
     });
 
     return () => unsubscribe();
