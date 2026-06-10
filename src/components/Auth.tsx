@@ -6,6 +6,8 @@ import { Sparkles } from 'lucide-react';
 import { motion } from 'motion/react';
 import { UserProfile } from '../types';
 
+const DESIGN_URL = 'https://lorraenmadre.app';
+
 export default function Auth({ onAuthReady }: { onAuthReady: (user: UserProfile) => void }) {
   const [loading, setLoading] = useState(true);
   const [authError, setAuthError] = useState<string | null>(null);
@@ -126,11 +128,14 @@ export default function Auth({ onAuthReady }: { onAuthReady: (user: UserProfile)
       >
         <div className="flex flex-col sm:flex-row items-end gap-12">
           <div className="flex flex-col items-center gap-4">
-            <button
+            <a
+              href={DESIGN_URL}
+              target="_blank"
+              rel="noreferrer"
               className="px-16 py-8 border border-black bg-white text-black system-tag hover:bg-black hover:text-white transition-all shadow-xl rounded-full"
             >
               design
-            </button>
+            </a>
             <p className="system-tag text-slate-300 normal-case tracking-normal italic">Roadmap to your Universal Family Office</p>
           </div>
           <button
