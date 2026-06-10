@@ -5,6 +5,8 @@ import { House } from '../types';
 import { cn } from '../lib/utils';
 import { Users, Library, Database, Wrench, Search, Sparkles, ArrowRight, Upload } from 'lucide-react';
 
+const DESIGN_URL = 'https://lorraenmadre.app';
+
 export default function CastleMap({ onSelectHouse, onUpload, activePresences }: { 
   onSelectHouse: (house: House) => void,
   onUpload: () => void,
@@ -37,11 +39,14 @@ export default function CastleMap({ onSelectHouse, onUpload, activePresences }: 
         </div>
         
         <div className="flex items-center gap-4">
-          <button
+          <a
+            href={DESIGN_URL}
+            target="_blank"
+            rel="noreferrer"
             className="px-16 py-8 border border-black bg-white text-black system-tag hover:bg-black hover:text-white transition-all shadow-xl rounded-full"
           >
             design
-          </button>
+          </a>
         </div>
       </div>
 
