@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { auth, googleProvider, db } from '../firebase';
-import { signInWithPopup, onAuthStateChanged } from 'firebase/auth';
+import { signInWithRedirect, getRedirectResult, onAuthStateChanged } from 'firebase/auth';
 import { doc, getDoc, setDoc, serverTimestamp } from 'firebase/firestore';
 import { Sparkles } from 'lucide-react';
 import { motion } from 'motion/react';
@@ -13,10 +13,20 @@ export default function Auth({ onAuthReady }: { onAuthReady: (user: UserProfile)
   const [authError, setAuthError] = useState<string | null>(null);
 
   useEffect(() => {
+    let isMounted = true;
+
     const loadingTimeout = window.setTimeout(() => {
+      if (!isMounted) return;
       setLoading(false);
       setAuthError('Newcastle is awake, but Firebase is taking too long to answer. Try signing in again.');
-    }, 8000);
+    }, 10000);
+
+    getRedirectResult(auth).catch((error) => {
+      console.error('Redirect login result failed:', error);
+      if (!isMounted) return;
+      setAuthError('Google returned from login, but Firebase did not accept the redirect result. Check Google sign-in and authorized domains.');
+      setLoading(false);
+    });
 
     const unsubscribe = onAuthStateChanged(
       auth,
@@ -24,7 +34,7 @@ export default function Auth({ onAuthReady }: { onAuthReady: (user: UserProfile)
         window.clearTimeout(loadingTimeout);
 
         if (!user) {
-          setLoading(false);
+          if (isMounted) setLoading(false);
           return;
         }
 
@@ -52,21 +62,26 @@ export default function Auth({ onAuthReady }: { onAuthReady: (user: UserProfile)
           }
         } catch (error) {
           console.error('User profile load failed. Continuing with local profile:', error);
-          setAuthError('Your login worked, but the profile vault is not reachable yet. Opening Newcastle in safe mode.');
-          onAuthReady(fallbackUser);
+          if (isMounted) {
+            setAuthError('Your login worked, but the profile vault is not reachable yet. Opening Newcastle in safe mode.');
+            onAuthReady(fallbackUser);
+          }
         } finally {
-          setLoading(false);
+          if (isMounted) setLoading(false);
         }
       },
       (error) => {
         window.clearTimeout(loadingTimeout);
         console.error('Auth listener failed:', error);
-        setAuthError('Firebase Auth did not initialize cleanly. Refresh once, then check the Firebase authorized domains.');
-        setLoading(false);
+        if (isMounted) {
+          setAuthError('Firebase Auth did not initialize cleanly. Refresh once, then check the Firebase authorized domains.');
+          setLoading(false);
+        }
       }
     );
 
     return () => {
+      isMounted = false;
       window.clearTimeout(loadingTimeout);
       unsubscribe();
     };
@@ -74,11 +89,13 @@ export default function Auth({ onAuthReady }: { onAuthReady: (user: UserProfile)
 
   const handleLogin = async () => {
     setAuthError(null);
+    setLoading(true);
     try {
-      await signInWithPopup(auth, googleProvider);
+      await signInWithRedirect(auth, googleProvider);
     } catch (error) {
-      console.error('Login failed:', error);
-      setAuthError('Login failed. Add this site to Firebase Auth authorized domains, then try again.');
+      console.error('Login redirect failed:', error);
+      setAuthError('Login failed before Google could open. Check Firebase Auth settings, then try again.');
+      setLoading(false);
     }
   };
 
