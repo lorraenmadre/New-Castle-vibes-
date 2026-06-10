@@ -1,58 +1,95 @@
 import React, { useState, useEffect } from 'react';
-import { auth, googleProvider, db, handleFirestoreError, OperationType } from '../firebase';
+import { auth, googleProvider, db } from '../firebase';
 import { signInWithPopup, onAuthStateChanged } from 'firebase/auth';
 import { doc, getDoc, setDoc, serverTimestamp } from 'firebase/firestore';
-import { LogIn, Shield, ArrowRight, Sparkles } from 'lucide-react';
+import { Sparkles } from 'lucide-react';
 import { motion } from 'motion/react';
 import { UserProfile } from '../types';
 
 export default function Auth({ onAuthReady }: { onAuthReady: (user: UserProfile) => void }) {
   const [loading, setLoading] = useState(true);
+  const [authError, setAuthError] = useState<string | null>(null);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      if (user) {
+    const loadingTimeout = window.setTimeout(() => {
+      setLoading(false);
+      setAuthError('Newcastle is awake, but Firebase is taking too long to answer. Try signing in again.');
+    }, 8000);
+
+    const unsubscribe = onAuthStateChanged(
+      auth,
+      async (user) => {
+        window.clearTimeout(loadingTimeout);
+
+        if (!user) {
+          setLoading(false);
+          return;
+        }
+
+        const fallbackUser: UserProfile = {
+          uid: user.uid,
+          email: user.email || '',
+          displayName: user.displayName || 'New User',
+          role: 'owner',
+          createdAt: new Date().toISOString(),
+        };
+
         try {
-          const userDoc = await getDoc(doc(db, 'users', user.uid));
+          const userRef = doc(db, 'users', user.uid);
+          const userDoc = await getDoc(userRef);
+
           if (userDoc.exists()) {
             onAuthReady(userDoc.data() as UserProfile);
           } else {
             const newUser: UserProfile = {
-              uid: user.uid,
-              email: user.email!,
-              displayName: user.displayName || 'New User',
-              role: 'owner',
+              ...fallbackUser,
               createdAt: serverTimestamp(),
             };
-            await setDoc(doc(db, 'users', user.uid), newUser);
+            await setDoc(userRef, newUser);
             onAuthReady(newUser);
           }
         } catch (error) {
-          handleFirestoreError(error, OperationType.GET, `users/${user.uid}`);
+          console.error('User profile load failed. Continuing with local profile:', error);
+          setAuthError('Your login worked, but the profile vault is not reachable yet. Opening Newcastle in safe mode.');
+          onAuthReady(fallbackUser);
+        } finally {
+          setLoading(false);
         }
+      },
+      (error) => {
+        window.clearTimeout(loadingTimeout);
+        console.error('Auth listener failed:', error);
+        setAuthError('Firebase Auth did not initialize cleanly. Refresh once, then check the Firebase authorized domains.');
+        setLoading(false);
       }
-      setLoading(false);
-    });
-    return () => unsubscribe();
+    );
+
+    return () => {
+      window.clearTimeout(loadingTimeout);
+      unsubscribe();
+    };
   }, [onAuthReady]);
 
   const handleLogin = async () => {
+    setAuthError(null);
     try {
       await signInWithPopup(auth, googleProvider);
     } catch (error) {
       console.error('Login failed:', error);
+      setAuthError('Login failed. Add this site to Firebase Auth authorized domains, then try again.');
     }
   };
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-white">
+      <div className="min-h-screen flex flex-col items-center justify-center bg-white text-black gap-6">
         <motion.div
           animate={{ opacity: [0.4, 1, 0.4] }}
           transition={{ duration: 2, repeat: Infinity }}
         >
           <Sparkles className="w-8 h-8 text-black" />
         </motion.div>
+        <p className="system-tag text-slate-300">Opening New Castle...</p>
       </div>
     );
   }
@@ -73,6 +110,11 @@ export default function Auth({ onAuthReady }: { onAuthReady: (user: UserProfile)
           <p className="text-3xl lg:text-4xl font-display italic text-slate-500 max-w-3xl leading-[1.1]">
             Get your House in order with <span className="system-tag text-black not-italic block mt-4 ml-1">TIME . space + Story</span>
           </p>
+          {authError && (
+            <p className="max-w-2xl text-sm font-display italic text-rose-600 bg-rose-50 border border-rose-100 p-4">
+              {authError}
+            </p>
+          )}
         </div>
       </motion.div>
 
@@ -104,7 +146,7 @@ export default function Auth({ onAuthReady }: { onAuthReady: (user: UserProfile)
           </button>
         </div>
         <p className="system-tag text-slate-300">
-          NEW CASTLE Legal Ops — Est. 2026
+          NEW CASTLE Legal Ops | Est. 2026
           <span className="block text-[8px] uppercase tracking-[0.3em] text-purple-300 mt-2">powered by 'perplexity computer'</span>
         </p>
       </motion.div>
