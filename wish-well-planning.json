@@ -1,0 +1,75 @@
+{
+  "version": "2026-09-24.1",
+  "scope": "Houses 3, 8, 9 operational correction",
+  "goal_house": 3,
+  "outcome_house": 8,
+  "plan_house": 9,
+  "task_house": 5,
+  "grid": {
+    "name": "Mandalart",
+    "rows": 9,
+    "columns": 9,
+    "goals_per_plan": 1,
+    "outcomes_per_goal": 8,
+    "task_slots_per_outcome": 8,
+    "task_slots_total": 64,
+    "outcome_appearances": 16,
+    "unique_records_when_full": 73
+  },
+  "timing": {
+    "operating_cycles": 3,
+    "weeks_per_operating_cycle": 4,
+    "stages_per_cycle": 8,
+    "astronomical_timestamps": "must be verified separately"
+  },
+  "baseline_plan_categories": [
+    "economic_resilience",
+    "natural_disaster_readiness",
+    "personal_family_disruption_provisional"
+  ],
+  "goal_limit": null,
+  "beatitude_mapping_status": "awaiting_founder_mapping",
+  "outcome_completion": "requires target evidence; task completion alone is insufficient",
+  "exit_rules": "may pause or stop before all outcomes are achieved",
+  "task_states": {
+    "south": "to_do",
+    "east": "in_progress",
+    "north": "testing",
+    "west": "waiting",
+    "done": "complete"
+  },
+  "erp_stages": [
+    {
+      "phase": "New Moon",
+      "stage": "Manifestation"
+    },
+    {
+      "phase": "Waxing Crescent",
+      "stage": "Discovery"
+    },
+    {
+      "phase": "First Quarter",
+      "stage": "Planning"
+    },
+    {
+      "phase": "Waxing Gibbous",
+      "stage": "Design"
+    },
+    {
+      "phase": "Full Moon",
+      "stage": "Intention"
+    },
+    {
+      "phase": "Waning Gibbous",
+      "stage": "Inception"
+    },
+    {
+      "phase": "Last/Third Quarter",
+      "stage": "Feedback"
+    },
+    {
+      "phase": "Waning Crescent",
+      "stage": "Execution"
+    }
+  ]
+}

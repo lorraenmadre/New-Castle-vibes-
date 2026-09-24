@@ -1,3 +1,5 @@
+> Operational correction: read [WISH WELL planning 2026-09-24.1](../WISH_WELL_PLANNING.md). House 3 = Goal; House 8 = Outcome / protection / exit; House 9 = quarterly Plan. Older subject-area and product mappings below do not replace these operational identities.
+
 # WISH WELL House Routing
 
 New Castle uses the WISH WELL house system to classify documents, tasks, summaries, and outputs.

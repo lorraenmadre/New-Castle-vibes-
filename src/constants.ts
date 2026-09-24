@@ -33,10 +33,10 @@ export const INITIAL_HOUSES: House[] = [
   },
   { 
     id: '3', 
-    name: 'Telecom, Tech + Energy', 
-    description: 'Information systems, digital assets, and physical energy.', 
+    name: 'Goals + Cycly ERP', 
+    description: 'SMART Goals with eight Outcomes and three ERP cycles.', 
     mantra: 'Connect and power.',
-    intention: 'To secure telecommunications, leverage technology, and manage energy resources.',
+    intention: 'To define measurable Goals and connect each to eight Outcomes and a quarterly Plan.',
     status: 'clear',
     label: '03',
     order: 3 
@@ -83,20 +83,20 @@ export const INITIAL_HOUSES: House[] = [
   },
   { 
     id: '8', 
-    name: 'Insurance and Exit', 
-    description: 'Risk mitigation and contingency planning.', 
+    name: 'Outcomes, Protection + Exit', 
+    description: 'Eight measurable Outcomes per Goal, evidence, protection and exit decisions.', 
     mantra: 'Plan the finish.',
-    intention: 'To ensure coverage against risk and prepare exit strategies for all ventures.',
+    intention: 'To assess Outcome evidence, protection gaps and conditions for transition or exit.',
     status: 'critical',
     label: '08',
     order: 8 
   },
   { 
     id: '9', 
-    name: 'Travel and Therapy', 
-    description: 'Mental health, mobility, and the dynamics of trust.', 
+    name: 'Quarterly Plans: Trust, Travel + Therapy', 
+    description: 'Mandalart planning: one Goal, eight Outcomes and 64 task spaces.', 
     mantra: 'Move with grace.',
-    intention: 'To cultivate trust, manage global mobility, and prioritize psychological wellbeing.',
+    intention: 'To coordinate quarterly Plans with trust, travel and therapy alignment.',
     status: 'clear',
     label: '09',
     order: 9 

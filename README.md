@@ -1,3 +1,5 @@
+> Current planning rules: [WISH WELL 2026-09-24.1](WISH_WELL_PLANNING.md). Read this correction before older House 3/8/9 definitions.
+
 # New Castle
 
 **Legal document shell for the Lorraen Madre UFO / WISH WELL operating system**
